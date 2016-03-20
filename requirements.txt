@@ -24,7 +24,6 @@ roman==2.0.0
 six==1.8.0
 SOAPpy==0.12.22
 SQLAlchemy==1.0.12
-uTidylib==0.2
 vboxapi==1.0
 Werkzeug==0.11.4
 wstools==0.4.3
