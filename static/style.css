@@ -31,6 +31,10 @@ a {
     font-size: .75em;
 }
 
+li {
+    color: #FFFFFF;	
+}
+
 .pane {
     position: absolute;
     left: 25%;

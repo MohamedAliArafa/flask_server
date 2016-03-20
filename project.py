@@ -15,6 +15,11 @@ app.logger.addHandler(logging.StreamHandler(sys.stdout))
 app.logger.setLevel(logging.ERROR)
 
 
+@app.route('/')
+def Summery():
+    return render_template('summery.html')
+
+
 @app.route('/GetShopItems/<int:shop_id>/JSON')
 def GetShopItemsJSON(shop_id):
     items = session.query(Items).filter_by(shop_id=shop_id)
@@ -27,7 +32,6 @@ def GetItemJSON(item_id):
     return jsonify(Items=[i.serialize for i in items])
 
 
-@app.route('/')
 @app.route('/GetShopItems/<int:shop_id>/')
 def GetShopItems(shop_id):
     shop = session.query(Shop).filter_by(id=shop_id).one()
@@ -83,4 +87,4 @@ def deleteShopItem(shop_id, item_id):
 if __name__ == '__main__':
     app.secret_key = "My_Super_Secret_Key"
     app.debug = True
-    #app.run(host='0.0.0.0', port=5000)
+    app.run(host='0.0.0.0', port=5000)
