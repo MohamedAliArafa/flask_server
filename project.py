@@ -2,6 +2,7 @@ from flask import Flask, render_template, request, redirect, url_for, flash, jso
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from database_setup import Base, Shop, Items
+import logging, sys
 
 engine = create_engine('sqlite:///shopitems.db')
 Base.metadata.bind = engine
@@ -9,6 +10,9 @@ DBSession = sessionmaker(bind=engine)
 session = DBSession()
 
 app = Flask(__name__)
+
+app.logger.addHandler(logging.StreamHandler(sys.stdout))
+app.logger.setLevel(logging.ERROR)
 
 
 @app.route('/GetShopItems/<int:shop_id>/JSON')

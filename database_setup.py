@@ -28,7 +28,7 @@ class Items(Base):
     price = Column(String(8))
     course = Column(String(250))
     shop_id = Column(Integer, ForeignKey('shop.id'))
-    shop = relationship(Shop, cascade="all, delete-orphan")
+    shop = relationship(Shop, cascade="all, delete-orphan", single_parent=True)
 
     @property
     def serialize(self):
