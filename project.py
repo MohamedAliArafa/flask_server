@@ -20,6 +20,13 @@ def Summery():
     return render_template('summery.html')
 
 
+@app.route('/GetAllShops/JSON')
+def GetAllShops():
+    shops = session.query(Shop).all()
+    return jsonify(Shop=[i.serialize for i in shops])
+
+
+
 @app.route('/GetShopItems/<int:shop_id>/JSON')
 def GetShopItemsJSON(shop_id):
     items = session.query(Items).filter_by(shop_id=shop_id)
