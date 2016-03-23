@@ -60,12 +60,12 @@ def new_shop_item(shop_id):
     global new_item
     shop = session.query(Shop).filter_by(id=shop_id).one()
     if request.method == 'POST':
-        if request.form['name']:
-            new_item = Items(name=request.form['name'], shop_id=shop_id)
+        if request.form['name'] and request.form['quantity']:
+            new_item = Items(name=request.form['name'], quantity=request.form['quantity'], shop_id=shop_id)
         session.add(new_item)
         session.commit()
         flash("New Item Added!!")
-        return redirect(url_for('GetShopItems', shop_id=shop_id))
+        return redirect(url_for('get_shop_items', shop_id=shop_id))
     else:
         return render_template('newMenuItem.html', shop=shop)
 
