@@ -48,9 +48,9 @@ class Shop(Base):
     def serialize(self):
         # Returns object data in easly serialized format
         return {
+            'id': self.id,
             'name': self.name,
             'description': self.description,
-            'id': self.id,
             'owner': self.owner,
             'profile_pic': self.profile_pic
         }
@@ -64,19 +64,20 @@ class Items(Base):
     short_description = Column(String(250))
     description = Column(String(500))
     quantity = Column(Integer, nullable=False)
+    image = Column(String(20))
     price = Column(String(8))
     shop_id = Column(Integer, ForeignKey('shop.id'))
-    cat_id = Column(Integer, ForeignKey('category.id'))
     shop = relationship(Shop, cascade="all, delete-orphan", single_parent=True)
+    cat_id = Column(Integer, ForeignKey('category.id'))
     category = relationship(Category)
 
     @property
     def serialize(self):
         # Returns object data in easily serialized format
         return {
+            'id': self.id,
             'name': self.name,
             'description': self.description,
-            'id': self.id,
             'price': self.price,
             'short_description': self.short_description,
             'shop_id': self.shop.id,

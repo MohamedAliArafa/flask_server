@@ -22,10 +22,8 @@ app.logger.addHandler(logging.StreamHandler(sys.stdout))
 app.logger.setLevel(logging.ERROR)
 
 UPLOAD_FOLDER = 'uploads'
-UPLOAD_FOLDER_SERVER = '/home/fantom/PycharmProjects/FullStackFoundations/server/heroku/uploads/'
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
-app.config['UPLOAD_FOLDER_SERVER'] = UPLOAD_FOLDER_SERVER
 
 app.add_url_rule('/uploads/<filename>', 'uploaded_file', build_only=True)
 app.wsgi_app = SharedDataMiddleware(app.wsgi_app, {'/uploads': app.config['UPLOAD_FOLDER']})
@@ -63,10 +61,13 @@ def new_shop():
             if image_file and allowed_file(image_file.filename):
                 # filename = secure_filename(image_file.filename)
                 filename = str(uuid.uuid4())
-                image_file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename+"."+image_file.filename.rsplit('.', 1)[1]))
-            new_shop = Shop(name=request.form['name'], profile_pic=filename+"."+image_file.filename.rsplit('.', 1)[1], owner=request.form['owner'],
-                            description=request.form['description'],
-                            cat_id=request.form.get('cat_id'))
+                image_file.save(
+                    os.path.join(app.config['UPLOAD_FOLDER'], filename + "." + image_file.filename.rsplit('.', 1)[1]))
+                new_shop = Shop(name=request.form['name'],
+                                profile_pic=filename + "." + image_file.filename.rsplit('.', 1)[1],
+                                owner=request.form['owner'],
+                                description=request.form['description'],
+                                cat_id=request.form.get('cat_id'))
             session.add(new_shop)
             session.commit()
             flash("New Item Added!!")
@@ -93,6 +94,12 @@ def get_item_json(item_id):
     return jsonify(Items=[i.serialize for i in items])
 
 
+@app.route('/GetItemByCategory/<int:cat_id>/JSON')
+def get_item_by_cat_json(cat_id):
+    items = session.query(Items).filter_by(cat_id=cat_id)
+    return jsonify(Items=[i.serialize for i in items])
+
+
 @app.route('/GetShopItems/<int:shop_id>/')
 def get_shop_items(shop_id):
     shop = session.query(Shop).filter_by(id=shop_id).one()
@@ -107,10 +114,17 @@ def new_shop_item(shop_id):
     shop = session.query(Shop).filter_by(id=shop_id).one()
     if request.method == 'POST':
         if request.form['name'] and request.form['quantity']:
-            # category = session.query(Category).filter_by(id=request.form['category']).one()
-            new_item = Items(name=request.form['name'], quantity=request.form['quantity'], shop_id=shop_id,
-                             cat_id=request.form.get('category'), price="$" + request.form['price'],
-                             description=request.form['description'])
+            image_file = request.files['image']
+            if image_file and allowed_file(image_file.filename):
+                # filename = secure_filename(image_file.filename)
+                filename = str(uuid.uuid4())
+                image_file.save(
+                    os.path.join(app.config['UPLOAD_FOLDER'], filename + "." + image_file.filename.rsplit('.', 1)[1]))
+
+                # category = session.query(Category).filter_by(id=request.form['category']).one()
+                new_item = Items(name=request.form['name'], quantity=request.form['quantity'], shop_id=shop_id,
+                                 cat_id=request.form.get('category'), price="$" + request.form['price'],
+                                 description=request.form['description'], image=filename + "." + image_file.filename.rsplit('.', 1)[1])
             session.add(new_item)
             session.commit()
             # flash("New Item Added!!")
@@ -152,6 +166,6 @@ def delete_shop_item(shop_id, item_id):
 if __name__ == '__main__':
     app.secret_key = 'My_Super_Secret_Key'
     app.config['SESSION_TYPE'] = 'filesystem'
-    sess.init_app(app)
+    # sess.init_app(app)
     app.debug = True
     app.run(host='0.0.0.0', port=5000)
