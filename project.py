@@ -45,7 +45,7 @@ def get_all_shops():
 
 
 @app.route('/GetCategories/JSON')
-def get_all_shops():
+def get_all_categories():
     categories = session.query(Category).all()
     return jsonify(Category=[i.serialize for i in categories])
 
