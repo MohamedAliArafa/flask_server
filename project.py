@@ -1,11 +1,14 @@
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
+from werkzeug import secure_filename
+from werkzeug import SharedDataMiddleware
 import logging
 import sys
+import os
 
 from flask import Flask, render_template, request, redirect, url_for, flash, jsonify
 
-from database_setup import Base, Shop, Items
+from database_setup import Base, Shop, Items, Category
 
 engine = create_engine('sqlite:///shopitems.db')
 Base.metadata.bind = engine
@@ -17,6 +20,18 @@ app = Flask(__name__)
 app.logger.addHandler(logging.StreamHandler(sys.stdout))
 app.logger.setLevel(logging.ERROR)
 
+UPLOAD_FOLDER = 'uploads'
+ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+
+app.add_url_rule('/uploads/<filename>', 'uploaded_file', build_only=True)
+app.wsgi_app = SharedDataMiddleware(app.wsgi_app, {'/uploads': app.config['UPLOAD_FOLDER']})
+
+
+def allowed_file(filename):
+    return '.' in filename and \
+           filename.rsplit('.', 1)[1] in ALLOWED_EXTENSIONS
+
 
 @app.route('/')
 def summery():
@@ -24,9 +39,36 @@ def summery():
 
 
 @app.route('/GetAllShops/JSON')
-def get_all_hops():
+def get_all_shops():
     shops = session.query(Shop).all()
     return jsonify(Shop=[i.serialize for i in shops])
+
+
+@app.route('/GetCategories/JSON')
+def get_all_shops():
+    categories = session.query(Category).all()
+    return jsonify(Category=[i.serialize for i in categories])
+
+
+@app.route('/newShop/', methods=['GET', 'POST'])
+# Task 1: Create route for newShopItem function here
+def new_shop():
+    global new_shop
+    if request.method == 'POST':
+        if request.form['name'] and request.form['owner']:
+            image_file = request.files['profile_pic']
+            if image_file and allowed_file(image_file.filename):
+                filename = secure_filename(image_file.filename)
+                image_file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+            new_shop = Shop(name=request.form['name'], profile_pic=filename, owner=request.form['owner'],
+                                description=request.form['description'],
+                                cat_id=request.form.get('cat_id'))
+            session.add(new_shop)
+            session.commit()
+            flash("New Item Added!!")
+        return redirect(url_for('get_all_shops'))
+    else:
+        return render_template('newShop.html')
 
 
 @app.route('/GetShop/<int:shop_id>/JSON')
@@ -61,10 +103,13 @@ def new_shop_item(shop_id):
     shop = session.query(Shop).filter_by(id=shop_id).one()
     if request.method == 'POST':
         if request.form['name'] and request.form['quantity']:
-            new_item = Items(name=request.form['name'], quantity=request.form['quantity'], shop_id=shop_id)
-        session.add(new_item)
-        session.commit()
-        flash("New Item Added!!")
+            # category = session.query(Category).filter_by(id=request.form['category']).one()
+            new_item = Items(name=request.form['name'], quantity=request.form['quantity'], shop_id=shop_id,
+                             cat_id=request.form.get('category'), price="$" + request.form['price'],
+                             description=request.form['description'])
+            session.add(new_item)
+            session.commit()
+            flash("New Item Added!!")
         return redirect(url_for('get_shop_items', shop_id=shop_id))
     else:
         return render_template('newMenuItem.html', shop=shop)

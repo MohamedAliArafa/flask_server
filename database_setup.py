@@ -12,6 +12,25 @@ Base = declarative_base()
 metadata = MetaData()
 
 
+class Category(Base):
+    __tablename__ = 'category'
+    id = Column(Integer, primary_key=True)
+    name = Column(String(20), nullable=False)
+    @property
+    def serialize(self):
+        # Returns object data in easly serialized format
+        return {
+            'id': self.id,
+            'name': self.name
+        }
+
+
+class ShopCategory(Base):
+    __tablename__ = 'shop_category'
+    id = Column(Integer, primary_key=True)
+    name = Column(String(20), nullable=False)
+
+
 class Shop(Base):
     __tablename__ = 'shop'
 
@@ -21,6 +40,8 @@ class Shop(Base):
     profile_pic = Column(String(200))
     avatar_pic = Column(String(200))
     description = Column(String(250))
+    cat_id = Column(Integer, ForeignKey('shop_category.id'))
+    category = relationship(ShopCategory)
 
     @property
     def serialize(self):
@@ -44,18 +65,21 @@ class Items(Base):
     quantity = Column(Integer, nullable=False)
     price = Column(String(8))
     shop_id = Column(Integer, ForeignKey('shop.id'))
+    cat_id = Column(Integer, ForeignKey('category.id'))
     shop = relationship(Shop, cascade="all, delete-orphan", single_parent=True)
+    category = relationship(Category)
 
     @property
     def serialize(self):
-        # Returns object data in easly serialized format
+        # Returns object data in easily serialized format
         return {
             'name': self.name,
             'description': self.description,
             'id': self.id,
             'price': self.price,
             'short_description': self.short_description,
-            'shop_id': self.shop.id
+            'shop_id': self.shop.id,
+            'cat_id': self.category.id,
         }
 
 
