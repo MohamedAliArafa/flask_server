@@ -7,12 +7,33 @@
     {{ shop.name }} | New Menu Item
 </h1>
 
-<form action="{{url_for('editShopItem', shop_id=shop.id, item_id=item.id)}}" method="post">
+<form action="{{url_for('edit_shop_item', shop_id=shop.id, item_id=item.id)}}" method="post"  enctype=multipart/form-data>
 
     <p>Name</p>
-    <input type="text" placeholder="{{item.name}}" size="30" name="name">
-    <input type="submit" value="create">
-    <a href="{{url_for('GetShopItems', shop_id=shop.id)}}">Cancel</a>
+    <input type="text" size="30" name="name" placeholder="{{item.name}}">
+
+    <p>Description</p>
+    <input type="text" size="30" name="description" placeholder="{{item.description}}">
+
+    <p>Price</p>
+    <input type="number" size="30" name="price" placeholder="{{item.price}}">
+
+    <p>Quantity</p>
+    <input type="number" size="30" name="quantity"  placeholder="{{item.quantity}}">
+
+    <p><input type=file name=image>
+
+    <p>Category</p>
+    <select name="cat_id">
+        <option value="" disabled="disabled" selected="selected">Please select a Category</option>
+        <option value="1">Books</option>
+        <option value="2">Clothing</option>
+        <option value="3">Jewelery</option>
+        <option value="4">Home</option>
+        <option value="5">Travel</option>
+    </select>
+    <input type="submit" value="Edit">
+    <a href="{{url_for('get_shop_items', shop_id=shop.id)}}">Cancel</a>
 </form>
 
 </body>

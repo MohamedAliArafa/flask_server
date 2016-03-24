@@ -76,6 +76,35 @@ def new_shop():
         return render_template('newShop.html')
 
 
+@app.route('/editShop/<int:shop_id>', methods=['GET', 'POST'])
+# Task 1: Create route for newShopItem function here
+def edit_shop():
+    shop = session.query(Shop).filter_by(shop_id=shop_id).one()
+    if request.method == 'POST':
+        if request.form['name'] and request.form['owner']:
+            shop.name = request.form['name']
+        if request.form['owner']:
+            shop.owner = request.form['owner']
+        if request.form['description']:
+            shop.description = request.form['description']
+        image_file = request.files['profile_pic']
+        if image_file and allowed_file(image_file.filename):
+            # filename = secure_filename(image_file.filename)
+            filename = str(uuid.uuid4())
+            image_file.save(
+                os.path.join(app.config['UPLOAD_FOLDER'], filename + "." + image_file.filename.rsplit('.', 1)[1]))
+            shop.profile_pic = filename + "." + image_file.filename.rsplit('.', 1)[1]
+        if request.form['cat_id']:
+            shop.cat_id = request.form['cat_id']
+            shop.category = session.query(Category).filter_by(cat_id=cat_id).one()
+        session.add(new_shop)
+        session.commit()
+        flash("New Item Added!!")
+        return redirect(url_for('get_all_shops'))
+    else:
+        return render_template('newShop.html')
+
+
 @app.route('/GetShop/<int:shop_id>/JSON')
 def get_shop(shop_id):
     shops = session.query(Shop).filter_by(id=shop_id)
@@ -123,8 +152,14 @@ def new_shop_item(shop_id):
 
                 # category = session.query(Category).filter_by(id=request.form['category']).one()
                 new_item = Items(name=request.form['name'], quantity=request.form['quantity'], shop_id=shop_id,
-                                 cat_id=request.form.get('category'), price="$" + request.form['price'],
-                                 description=request.form['description'], image=filename + "." + image_file.filename.rsplit('.', 1)[1])
+                                 cat_id=request.form.get('cat_id'), price="$" + request.form['price'],
+                                 description=request.form['description'],
+                                 image=filename + "." + image_file.filename.rsplit('.', 1)[1])
+                session.add(new_item)
+                session.commit()
+            new_item = Items(name=request.form['name'], quantity=request.form['quantity'], shop_id=shop_id,
+                             cat_id=request.form['cat_id'], price="$" + request.form['price'],
+                             description=request.form['description'])
             session.add(new_item)
             session.commit()
             # flash("New Item Added!!")
@@ -141,10 +176,27 @@ def edit_shop_item(shop_id, item_id):
     if request.method == 'POST':
         if request.form['name']:
             item.name = request.form['name']
+        if request.form['description']:
+            item.description = request.form['description']
+        if request.form['quantity']:
+            item.quantity = request.form['quantity']
+        if request.form['price']:
+            item.quantity = request.form['price']
+        if request.form['cat_id']:
+            print('category', request.form['cat_id'])
+            item.category = session.query(Category).filter_by(id=request.form['cat_id']).one()
+            item.cat_id = request.form['cat_id']
+        if request.files['image'] and allowed_file(request.files['image'].filename):
+            image_file = request.files['image']
+            # filename = secure_filename(image_file.filename)
+            filename = str(uuid.uuid4())
+            image_file.save(
+                os.path.join(app.config['UPLOAD_FOLDER'], filename + "." + image_file.filename.rsplit('.', 1)[1]))
+            item.image = filename + "." + image_file.filename.rsplit('.', 1)[1]
         session.add(item)
         session.commit()
         flash("New Item Edited!!")
-        return redirect(url_for('GetShopItems', shop_id=shop_id))
+        return redirect(url_for('get_shop_items', shop_id=shop_id))
     else:
         return render_template('editMenuItem.html', shop=shop, item=item)
 
