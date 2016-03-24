@@ -16,6 +16,7 @@ class Category(Base):
     __tablename__ = 'category'
     id = Column(Integer, primary_key=True)
     name = Column(String(20), nullable=False)
+
     @property
     def serialize(self):
         # Returns object data in easly serialized format

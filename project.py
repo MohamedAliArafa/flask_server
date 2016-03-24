@@ -2,6 +2,7 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from werkzeug import secure_filename
 from werkzeug import SharedDataMiddleware
+import uuid
 import logging
 import sys
 import os
@@ -21,8 +22,10 @@ app.logger.addHandler(logging.StreamHandler(sys.stdout))
 app.logger.setLevel(logging.ERROR)
 
 UPLOAD_FOLDER = 'uploads'
+UPLOAD_FOLDER_SERVER = '/home/fantom/PycharmProjects/FullStackFoundations/server/heroku/uploads/'
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+app.config['UPLOAD_FOLDER_SERVER'] = UPLOAD_FOLDER_SERVER
 
 app.add_url_rule('/uploads/<filename>', 'uploaded_file', build_only=True)
 app.wsgi_app = SharedDataMiddleware(app.wsgi_app, {'/uploads': app.config['UPLOAD_FOLDER']})
@@ -53,16 +56,17 @@ def get_all_categories():
 @app.route('/newShop/', methods=['GET', 'POST'])
 # Task 1: Create route for newShopItem function here
 def new_shop():
-    global new_shop
+    global new_shop, filename
     if request.method == 'POST':
         if request.form['name'] and request.form['owner']:
             image_file = request.files['profile_pic']
             if image_file and allowed_file(image_file.filename):
-                filename = secure_filename(image_file.filename)
+                # filename = secure_filename(image_file.filename)
+                filename = str(uuid.uuid4())
                 image_file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-            new_shop = Shop(name=request.form['name'], profile_pic=filename, owner=request.form['owner'],
-                                description=request.form['description'],
-                                cat_id=request.form.get('cat_id'))
+            new_shop = Shop(name=request.form['name'], profile_pic=filename+"."+image_file.filename.rsplit('.', 1)[1], owner=request.form['owner'],
+                            description=request.form['description'],
+                            cat_id=request.form.get('cat_id'))
             session.add(new_shop)
             session.commit()
             flash("New Item Added!!")
