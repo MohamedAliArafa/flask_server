@@ -150,7 +150,7 @@ def delete_shop_item(shop_id, item_id):
 
 
 if __name__ == '__main__':
-    app.secret_key = "My_Super_Secret_Key"
+    app.secret_key = 'My_Super_Secret_Key'
     app.config['SESSION_TYPE'] = 'filesystem'
     sess.init_app(app)
     app.debug = True
