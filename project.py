@@ -63,7 +63,7 @@ def new_shop():
             if image_file and allowed_file(image_file.filename):
                 # filename = secure_filename(image_file.filename)
                 filename = str(uuid.uuid4())
-                image_file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+                image_file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename+"."+image_file.filename.rsplit('.', 1)[1]))
             new_shop = Shop(name=request.form['name'], profile_pic=filename+"."+image_file.filename.rsplit('.', 1)[1], owner=request.form['owner'],
                             description=request.form['description'],
                             cat_id=request.form.get('cat_id'))
