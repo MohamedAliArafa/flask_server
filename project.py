@@ -113,7 +113,7 @@ def new_shop_item(shop_id):
                              description=request.form['description'])
             session.add(new_item)
             session.commit()
-            flash("New Item Added!!")
+            # flash("New Item Added!!")
         return redirect(url_for('get_shop_items', shop_id=shop_id))
     else:
         return render_template('newMenuItem.html', shop=shop)

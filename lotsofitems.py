@@ -32,8 +32,8 @@ SCat5 = ShopCategory(name="Travel")
 
 # Menu for UrbanBurger
 Shop1 = Shop(name="Urban Burger", owner="Mohamed Arafa",
-             profile_pic="http://naturemappingfoundation.org/natmap/photos/birds/barn_owl_1tfk.jpg",
-             avatar_pic="http://naturemappingfoundation.org/natmap/photos/birds/barn_owl_1tfk.jpg",
+             profile_pic="d48e33b3-e4f6-4c71-8577-4abba285021c.jpg",
+             avatar_pic="d48e33b3-e4f6-4c71-8577-4abba285021c.jpg",
              description="cool shop at tanta that sells the best and the best only", category=SCat1)
 
 session.add(Shop1)
@@ -97,8 +97,8 @@ session.commit()
 
 # Menu for Super Stir Fry
 Shop2 = Shop(name="Urban Burger", owner="Mohamed Arafa",
-             profile_pic="http://naturemappingfoundation.org/natmap/photos/birds/barn_owl_1tfk.jpg",
-             avatar_pic="http://naturemappingfoundation.org/natmap/photos/birds/barn_owl_1tfk.jpg",
+             profile_pic="d48e33b3-e4f6-4c71-8577-4abba285021c.jpg",
+             avatar_pic="d48e33b3-e4f6-4c71-8577-4abba285021c.jpg",
              description="cool shop at tanta that sells the best and the best only", category=SCat2)
 
 session.add(Shop2)
@@ -151,8 +151,8 @@ session.commit()
 
 # Menu for Panda Garden
 Shop1 = Shop(name="Urban Burger", owner="Mohamed Arafa",
-             profile_pic="http://naturemappingfoundation.org/natmap/photos/birds/barn_owl_1tfk.jpg",
-             avatar_pic="http://naturemappingfoundation.org/natmap/photos/birds/barn_owl_1tfk.jpg",
+             profile_pic="d48e33b3-e4f6-4c71-8577-4abba285021c.jpg",
+             avatar_pic="d48e33b3-e4f6-4c71-8577-4abba285021c.jpg",
              description="cool shop at tanta that sells the best and the best only", category=SCat3)
 
 session.add(Shop1)
@@ -198,8 +198,8 @@ session.commit()
 
 # Menu for Thyme for that
 Shop1 = Shop(name="Urban Burger", owner="Mohamed Arafa",
-             profile_pic="http://naturemappingfoundation.org/natmap/photos/birds/barn_owl_1tfk.jpg",
-             avatar_pic="http://naturemappingfoundation.org/natmap/photos/birds/barn_owl_1tfk.jpg",
+             profile_pic="d48e33b3-e4f6-4c71-8577-4abba285021c.jpg",
+             avatar_pic="d48e33b3-e4f6-4c71-8577-4abba285021c.jpg",
              description="cool shop at tanta that sells the best and the best only", category=SCat4)
 
 session.add(Shop1)
@@ -252,8 +252,8 @@ session.commit()
 
 # Menu for Tony's Bistro
 Shop1 = Shop(name="Urban Burger", owner="Mohamed Arafa",
-             profile_pic="http://naturemappingfoundation.org/natmap/photos/birds/barn_owl_1tfk.jpg",
-             avatar_pic="http://naturemappingfoundation.org/natmap/photos/birds/barn_owl_1tfk.jpg",
+             profile_pic="d48e33b3-e4f6-4c71-8577-4abba285021c.jpg",
+             avatar_pic="d48e33b3-e4f6-4c71-8577-4abba285021c.jpg",
              description="cool shop at tanta that sells the best and the best only", category=SCat5)
 
 session.add(Shop1)
@@ -296,8 +296,8 @@ session.commit()
 
 # Menu for Andala's
 Shop1 = Shop(name="Urban Burger", owner="Mohamed Arafa",
-             profile_pic="http://naturemappingfoundation.org/natmap/photos/birds/barn_owl_1tfk.jpg",
-             avatar_pic="http://naturemappingfoundation.org/natmap/photos/birds/barn_owl_1tfk.jpg",
+             profile_pic="d48e33b3-e4f6-4c71-8577-4abba285021c.jpg",
+             avatar_pic="d48e33b3-e4f6-4c71-8577-4abba285021c.jpg",
              description="cool shop at tanta that sells the best and the best only", category=SCat1)
 
 session.add(Shop1)
@@ -339,8 +339,8 @@ session.commit()
 
 # Menu for Auntie Ann's
 Shop1 = Shop(name="Urban Burger", owner="Mohamed Arafa",
-             profile_pic="http://naturemappingfoundation.org/natmap/photos/birds/barn_owl_1tfk.jpg",
-             avatar_pic="http://naturemappingfoundation.org/natmap/photos/birds/barn_owl_1tfk.jpg",
+             profile_pic="d48e33b3-e4f6-4c71-8577-4abba285021c.jpg",
+             avatar_pic="d48e33b3-e4f6-4c71-8577-4abba285021c.jpg",
              description="cool shop at tanta that sells the best and the best only", category=SCat2)
 
 session.add(Shop1)
@@ -416,8 +416,8 @@ session.add(Items2)
 session.commit()
 
 Shop1 = Shop(name="Urban Burger", owner="Mohamed Arafa",
-             profile_pic="http://naturemappingfoundation.org/natmap/photos/birds/barn_owl_1tfk.jpg",
-             avatar_pic="http://naturemappingfoundation.org/natmap/photos/birds/barn_owl_1tfk.jpg",
+             profile_pic="d48e33b3-e4f6-4c71-8577-4abba285021c.jpg",
+             avatar_pic="d48e33b3-e4f6-4c71-8577-4abba285021c.jpg",
              description="cool shop at tanta that sells the best and the best only", category=SCat3)
 session.add(Shop1)
 session.commit()
