@@ -101,7 +101,8 @@ class Items(Base):
             'short_description': self.short_description,
             'shop_id': self.shop.id,
             'shop_name': self.shop.name,
-            'cat_id': self.SubCategory.id
+            'cat_id': self.SubCategory.category.id,
+            'sub_cat_id': self.SubCategory.id
         }
 
 
