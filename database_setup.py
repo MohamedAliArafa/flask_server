@@ -98,6 +98,7 @@ class Items(Base):
             'name': self.name,
             'description': self.description,
             'price': self.price,
+            'image': self.image,
             'short_description': self.short_description,
             'shop_id': self.shop.id,
             'shop_name': self.shop.name,
