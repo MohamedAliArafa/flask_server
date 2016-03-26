@@ -87,7 +87,7 @@ session.add(Items4)
 session.commit()
 
 Items5 = Items(name="Root Beer", description="16oz of refreshing goodness", quantity=10,
-               price="$1.99", short_description="Beverage", SubCategory=SubCat2, shop=Shop1)
+               price="$1.99", short_description="Beverage", SubCategory=SubCat12, shop=Shop1)
 
 session.add(Items5)
 session.commit()
@@ -105,7 +105,7 @@ session.add(Items7)
 session.commit()
 
 Items8 = Items(name="Veggie Burger", description="Made with freshest of ingredients and home grown spices", quantity=10,
-               price="$5.99", short_description="Entree", SubCategory=SubCat3, shop=Shop1)
+               price="$5.99", short_description="Entree", SubCategory=SubCat13, shop=Shop1)
 
 session.add(Items8)
 session.commit()
@@ -151,7 +151,7 @@ session.commit()
 Items5 = Items(name="Beef Noodle Soup",
                description="A Chinese noodle soup made of stewed or red braised beef, beef broth, vegetables and Chinese noodles.",
                quantity=10,
-               price="14", short_description="Entree", SubCategory=SubCat2, shop=Shop2)
+               price="14", short_description="Entree", SubCategory=SubCat12, shop=Shop2)
 
 session.add(Items5)
 session.commit()
