@@ -16,13 +16,32 @@ class Category(Base):
     __tablename__ = 'category'
     id = Column(Integer, primary_key=True)
     name = Column(String(20), nullable=False)
+    hasSub = Column(String(5))
+
+    @property
+    def serialize(self):
+        # Returns object data in easily serialized format
+        return {
+            'id': self.id,
+            'name': self.name,
+            'hasSub': self.hasSub
+        }
+
+
+class SubCategory(Base):
+    __tablename__ = 'sub_category'
+    id = Column(Integer, primary_key=True)
+    name = Column(String(20), nullable=False)
+    parentCat = Column(Integer, ForeignKey('category.id'))
+    category = relationship(Category)
 
     @property
     def serialize(self):
         # Returns object data in easly serialized format
         return {
             'id': self.id,
-            'name': self.name
+            'name': self.name,
+            'parentCat': self.category.id
         }
 
 
@@ -68,8 +87,8 @@ class Items(Base):
     price = Column(String(8))
     shop_id = Column(Integer, ForeignKey('shop.id'))
     shop = relationship(Shop, cascade="all, delete-orphan", single_parent=True)
-    cat_id = Column(Integer, ForeignKey('category.id'))
-    category = relationship(Category)
+    cat_id = Column(Integer, ForeignKey('sub_category.id'))
+    SubCategory = relationship(SubCategory)
 
     @property
     def serialize(self):
@@ -81,7 +100,7 @@ class Items(Base):
             'price': self.price,
             'short_description': self.short_description,
             'shop_id': self.shop.id,
-            'cat_id': self.category.id,
+            'cat_id': self.SubCategory.id,
         }
 
 

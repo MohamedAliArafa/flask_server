@@ -6,10 +6,12 @@ import uuid
 import logging
 import sys
 import os
+import json
 
 from flask import Flask, render_template, request, redirect, url_for, flash, jsonify
+from flask.json import JSONEncoder
 
-from database_setup import Base, Shop, Items, Category
+from database_setup import Base, Shop, Items, Category, SubCategory
 
 engine = create_engine('sqlite:///shopitems.db')
 Base.metadata.bind = engine
@@ -27,6 +29,19 @@ app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 app.add_url_rule('/uploads/<filename>', 'uploaded_file', build_only=True)
 app.wsgi_app = SharedDataMiddleware(app.wsgi_app, {'/uploads': app.config['UPLOAD_FOLDER']})
+
+
+class MyJSONEncoder(JSONEncoder):
+    def default(self, obj):
+        if isinstance(obj, EqltByGene):
+            return {
+                'gene_id': obj.gene_id,
+                'gene_symbol': obj.gene_symbol,
+                'p_value': obj.p_value,
+            }
+        return super(MyJSONEncoder, self).default(obj)
+
+app.json_encoder = MyJSONEncoder
 
 
 def allowed_file(filename):
@@ -48,6 +63,12 @@ def get_all_shops():
 @app.route('/GetCategories/JSON')
 def get_all_categories():
     categories = session.query(Category).all()
+    return jsonify(Category=[i.serialize for i in categories])
+
+
+@app.route('/GetSubCategories/JSON')
+def get_sub_categories():
+    categories = session.query(SubCategory).all()
     return jsonify(Category=[i.serialize for i in categories])
 
 
@@ -78,8 +99,8 @@ def new_shop():
 
 @app.route('/editShop/<int:shop_id>', methods=['GET', 'POST'])
 # Task 1: Create route for newShopItem function here
-def edit_shop():
-    shop = session.query(Shop).filter_by(shop_id=shop_id).one()
+def edit_shop(shop_id):
+    shop = session.query(Shop).filter_by(id=shop_id).one()
     if request.method == 'POST':
         if request.form['name'] and request.form['owner']:
             shop.name = request.form['name']
@@ -102,7 +123,7 @@ def edit_shop():
         flash("New Item Added!!")
         return redirect(url_for('get_all_shops'))
     else:
-        return render_template('newShop.html')
+        return render_template('editShop.html', shop=shop)
 
 
 @app.route('/GetShop/<int:shop_id>/JSON')
@@ -210,7 +231,7 @@ def delete_shop_item(shop_id, item_id):
         session.delete(item)
         session.commit()
         flash("New Item DELETED!!")
-        return redirect(url_for('GetShopItems', shop_id=shop_id))
+        return redirect(url_for('get_shop_items_json', shop_id=shop_id))
     else:
         return render_template('deleteMenuItem.html', shop=shop, item=item)
 
