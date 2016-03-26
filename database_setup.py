@@ -100,7 +100,8 @@ class Items(Base):
             'price': self.price,
             'short_description': self.short_description,
             'shop_id': self.shop.id,
-            'cat_id': self.SubCategory.id,
+            'shop_name': self.shop.name,
+            'cat_id': self.SubCategory.id
         }
 
 
