@@ -26,11 +26,23 @@
     <p>Category</p>
     <select name="cat_id">
         <option value="" disabled="disabled" selected="selected">Please select a Category</option>
-        <option value="1">Books</option>
-        <option value="2">Clothing</option>
-        <option value="3">Jewelery</option>
-        <option value="4">Home</option>
-        <option value="5">Travel</option>
+        <option value="" disabled="disabled">Clothing</option>
+        <option value="1">Dresses</option>
+        <option value="2">Children</option>
+        <option value="3">Robes</option>
+        <option value="" disabled="disabled">Books</option>
+        <option value="4">Novel</option>
+        <option value="5">Comics</option>
+        <option value="6">Horror</option>
+        <option value="" disabled="disabled">Home</option>
+        <option value="7">Decor</option>
+        <option value="8">Lighting</option>
+        <option value="9">Kitchen</option>
+        <option value="" disabled="disabled">Jewelery</option>
+        <option value="10">Rings</option>
+        <option value="11">Necklaces</option>
+        <option value="12">Earnings</option>
+        <option value="13">Bracelets</option>
     </select>
     <input type="submit" value="Edit">
     <a href="{{url_for('get_shop_items', shop_id=shop.id)}}">Cancel</a>
