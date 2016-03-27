@@ -72,6 +72,12 @@ def get_sub_categories():
     return jsonify(Category=[i.serialize for i in categories])
 
 
+@app.route('/GetSubCategoriesById/<int:cat_id>/JSON')
+def get_sub_categories_by_id(cat_id):
+    categories = session.query(SubCategory).filter_by(parentCat=cat_id)
+    return jsonify(Category=[i.serialize for i in categories])
+
+
 @app.route('/newShop/', methods=['GET', 'POST'])
 # Task 1: Create route for newShopItem function here
 def new_shop():
