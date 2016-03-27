@@ -11,7 +11,7 @@ import json
 from flask import Flask, render_template, request, redirect, url_for, flash, jsonify
 from flask.json import JSONEncoder
 
-from database_setup import Base, Shop, Items, Category, SubCategory
+from database_setup import Base, Shop, Items, Category, SubCategory, ShopCategory
 
 engine = create_engine('sqlite:///shopitems.db')
 Base.metadata.bind = engine
@@ -91,7 +91,7 @@ def new_shop():
                                 cat_id=request.form.get('cat_id'))
             session.add(new_shop)
             session.commit()
-            flash("New Item Added!!")
+            # flash("New Item Added!!")
         return redirect(url_for('get_all_shops'))
     else:
         return render_template('newShop.html')
@@ -102,7 +102,7 @@ def new_shop():
 def edit_shop(shop_id):
     shop = session.query(Shop).filter_by(id=shop_id).one()
     if request.method == 'POST':
-        if request.form['name'] and request.form['owner']:
+        if request.form['name']:
             shop.name = request.form['name']
         if request.form['owner']:
             shop.owner = request.form['owner']
@@ -115,12 +115,13 @@ def edit_shop(shop_id):
             image_file.save(
                 os.path.join(app.config['UPLOAD_FOLDER'], filename + "." + image_file.filename.rsplit('.', 1)[1]))
             shop.profile_pic = filename + "." + image_file.filename.rsplit('.', 1)[1]
-        if request.form['cat_id']:
-            shop.cat_id = request.form['cat_id']
-            shop.category = session.query(Category).filter_by(cat_id=cat_id).one()
-        session.add(new_shop)
+        if request.form.get('cat_id'):
+            print(request.form.get('cat_id'))
+            shop.cat_id = request.form.get('cat_id')
+            shop.category = session.query(ShopCategory).filter_by(id=request.form.get('cat_id')).one()
+        session.add(shop)
         session.commit()
-        flash("New Item Added!!")
+        # flash("New Item Added!!")
         return redirect(url_for('get_all_shops'))
     else:
         return render_template('editShop.html', shop=shop)
@@ -171,15 +172,15 @@ def new_shop_item(shop_id):
                 image_file.save(
                     os.path.join(app.config['UPLOAD_FOLDER'], filename + "." + image_file.filename.rsplit('.', 1)[1]))
 
-                # category = session.query(Category).filter_by(id=request.form['category']).one()
-                new_item = Items(name=request.form['name'], quantity=request.form['quantity'], shop_id=shop_id,
-                                 cat_id=request.form.get('cat_id'), price="$" + request.form['price'],
+                category = session.query(SubCategory).filter_by(id=request.form.get('cat_id')).one()
+                new_item = Items(name=request.form['name'], quantity=request.form['quantity'], shop=shop,
+                                 category=category, price="$" + request.form['price'],
                                  description=request.form['description'],
                                  image=filename + "." + image_file.filename.rsplit('.', 1)[1])
                 session.add(new_item)
                 session.commit()
-            new_item = Items(name=request.form['name'], quantity=request.form['quantity'], shop_id=shop_id,
-                             cat_id=request.form['cat_id'], price="$" + request.form['price'],
+            new_item = Items(name=request.form['name'], quantity=request.form['quantity'], shop=shop,
+                             category=category, price="$" + request.form['price'],
                              description=request.form['description'])
             session.add(new_item)
             session.commit()
@@ -205,7 +206,7 @@ def edit_shop_item(shop_id, item_id):
             item.quantity = request.form['price']
         if request.form['cat_id']:
             print('category', request.form['cat_id'])
-            item.category = session.query(Category).filter_by(id=request.form['cat_id']).one()
+            item.category = session.query(SubCategory).filter_by(id=request.form['cat_id']).one()
             item.cat_id = request.form['cat_id']
         if request.files['image'] and allowed_file(request.files['image'].filename):
             image_file = request.files['image']
@@ -216,7 +217,7 @@ def edit_shop_item(shop_id, item_id):
             item.image = filename + "." + image_file.filename.rsplit('.', 1)[1]
         session.add(item)
         session.commit()
-        flash("New Item Edited!!")
+        # flash("New Item Edited!!")
         return redirect(url_for('get_shop_items', shop_id=shop_id))
     else:
         return render_template('editMenuItem.html', shop=shop, item=item)
@@ -230,7 +231,7 @@ def delete_shop_item(shop_id, item_id):
     if request.method == 'POST':
         session.delete(item)
         session.commit()
-        flash("New Item DELETED!!")
+        # flash("New Item DELETED!!")
         return redirect(url_for('get_shop_items_json', shop_id=shop_id))
     else:
         return render_template('deleteMenuItem.html', shop=shop, item=item)
@@ -239,6 +240,6 @@ def delete_shop_item(shop_id, item_id):
 if __name__ == '__main__':
     app.secret_key = 'My_Super_Secret_Key'
     app.config['SESSION_TYPE'] = 'filesystem'
-    sess.init_app(app)
+    # sess.init_app(app)
     app.debug = True
-    app.run()
+    app.run(host='0.0.0.0', port=5000)

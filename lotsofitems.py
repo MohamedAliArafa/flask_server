@@ -44,7 +44,6 @@ SCat1 = ShopCategory(name="Book Store")
 SCat2 = ShopCategory(name="Cloth Store")
 SCat3 = ShopCategory(name="Jewelery Store")
 SCat4 = ShopCategory(name="House Store")
-SCat5 = ShopCategory(name="Adventure Store")
 
 # Menu for UrbanBurger
 Shop1 = Shop(name="Urban Burger", owner="Mohamed Arafa",
@@ -270,7 +269,7 @@ session.commit()
 Shop1 = Shop(name="Urban Burger", owner="Mohamed Arafa",
              profile_pic="d48e33b3-e4f6-4c71-8577-4abba285021c.jpg",
              avatar_pic="d48e33b3-e4f6-4c71-8577-4abba285021c.jpg",
-             description="cool shop at tanta that sells the best and the best only", category=SCat5)
+             description="cool shop at tanta that sells the best and the best only", category=SCat3)
 
 session.add(Shop1)
 session.commit()
