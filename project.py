@@ -203,10 +203,10 @@ def edit_shop_item(shop_id, item_id):
         if request.form['quantity']:
             item.quantity = request.form['quantity']
         if request.form['price']:
-            item.quantity = request.form['price']
-        if request.form['cat_id']:
-            print('category', request.form['cat_id'])
-            item.category = session.query(SubCategory).filter_by(id=request.form['cat_id']).one()
+            item.price = request.form['price']
+        if request.form.get('cat_id'):
+            print('category', request.form.get('cat_id'))
+            item.category = session.query(SubCategory).filter_by(id=request.form.get('cat_id')).one()
             item.cat_id = request.form['cat_id']
         if request.files['image'] and allowed_file(request.files['image'].filename):
             image_file = request.files['image']
